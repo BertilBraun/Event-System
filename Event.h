@@ -1,7 +1,6 @@
 #pragma once
 
-#include <list>
-#include <utility>
+#include <vector>
 #include <memory>
 #include <mutex>
 
@@ -214,7 +213,7 @@ namespace EventIntern {
 
 	protected:
 		std::mutex m_addMutex;
-		std::list< EventHandlerImpl<Args...>* > m_eventHandlers;
+		std::vector< EventHandlerImpl<Args...>* > m_eventHandlers;
 	};
 }
 
