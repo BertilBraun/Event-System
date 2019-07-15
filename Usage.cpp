@@ -2,11 +2,17 @@
 
 #include <iostream>
 
+struct Client {
+	int money = 0;
+};
+
 struct Accountant {
-	void OnMoneyPaidMemberFunc(int& amount) 
+	void OnMoneyPaidMemberFunc(int& amount, Client& client) 
 	{ 
-		std::cout << "OnMoneyPaid called with param " << amount << std::endl; 
-		amount = 100;
+		std::cout << "OnMoneyPaid called with amount " << amount << " and client Money " << client.money << std::endl; 
+		client.money += 100;
+		amount -= 100;
+
 	}
 };
 
@@ -15,10 +21,17 @@ void OnShiftStarted()
 	std::cout << "OnShiftStarted called" << std::endl;
 }
 
+void OnTest(int i, Accountant acc) {
+
+	std::cout << "OnTest called " << i << std::endl;
+}
+
 int main()
 {
 	Event<void> ShiftStarted;
-	Event<int&> MoneyPaid;
+	Event<int&, Client&> MoneyPaid;
+
+	Client client;
 	Accountant accountant;
 	int value = 200;
 
@@ -28,17 +41,17 @@ int main()
 	MoneyPaid += EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 
 	std::cout << "Calling" << std::endl;
-	MoneyPaid(value);
+	MoneyPaid(value, client);
 	ShiftStarted();
 
 	std::cout << "Calling with changed Value" << std::endl;
-	MoneyPaid(value);
+	MoneyPaid(value, client);
 	
 	MoneyPaid -= EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 	ShiftStarted -= EventHandler::Bind(&OnShiftStarted);
 
 	std::cout << "Calling removed" << std::endl;
-	MoneyPaid(value);
+	MoneyPaid(value, client);
 	ShiftStarted();
 
 	std::cout << "Ending" << std::endl;
