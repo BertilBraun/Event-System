@@ -160,6 +160,11 @@ namespace EventIntern {
 			m_eventHandlers.clear();
 		}
 
+		EventBase<Args...>& operator += (void(*nonMemberFunctionToCall)())
+		{
+			return operator+=(EventHandler::Bind(nonMemberFunctionToCall));
+		}
+
 		EventBase<Args...>& operator += (EventHandlerImpl<Args...>* pHandlerToAdd)
 		{
 			m_addMutex.lock();
@@ -170,6 +175,11 @@ namespace EventIntern {
 			m_addMutex.unlock();
 
 			return *this;
+		}
+
+		EventBase<Args...>& operator -= (void(*nonMemberFunctionToCall)())
+		{
+			return operator-=(EventHandler::Bind(nonMemberFunctionToCall));
 		}
 
 		EventBase<Args...>& operator -= (EventHandlerImpl<Args...>* pHandlerToRemove)
@@ -227,7 +237,7 @@ public:
 		for (auto handler : this->m_eventHandlers)
 			if (handler)
 				handler->OnEvent(std::forward<Args>(eventData)...);
-	
+
 		m_updateMutex.unlock();
 	}
 

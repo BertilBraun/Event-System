@@ -7,9 +7,9 @@ struct Client {
 };
 
 struct Accountant {
-	void OnMoneyPaidMemberFunc(int& amount, Client& client) 
-	{ 
-		std::cout << "OnMoneyPaid called with amount " << amount << " and client Money " << client.money << std::endl; 
+	void OnMoneyPaidMemberFunc(int& amount, Client& client)
+	{
+		std::cout << "OnMoneyPaid called with amount " << amount << " and client Money " << client.money << std::endl;
 		client.money += 100;
 		amount -= 100;
 
@@ -37,7 +37,7 @@ int main()
 
 	std::cout << "Starting" << std::endl;
 
-	ShiftStarted += EventHandler::Bind(&OnShiftStarted);
+	ShiftStarted += OnShiftStarted;
 	MoneyPaid += EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 
 	std::cout << "Calling" << std::endl;
@@ -46,9 +46,9 @@ int main()
 
 	std::cout << "Calling with changed Value" << std::endl;
 	MoneyPaid(value, client);
-	
+
 	MoneyPaid -= EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
-	ShiftStarted -= EventHandler::Bind(&OnShiftStarted);
+	ShiftStarted -= OnShiftStarted;
 
 	std::cout << "Calling removed" << std::endl;
 	MoneyPaid(value, client);
