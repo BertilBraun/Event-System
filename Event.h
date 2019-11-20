@@ -160,6 +160,51 @@ namespace EventIntern {
 			m_eventHandlers.clear();
 		}
 
+		EventBase<Args...>& Add(void(*nonMemberFunctionToCall)(Args...))
+		{
+			return operator+=(EventHandler::Bind(nonMemberFunctionToCall));
+		}
+
+		template <typename U>
+		EventBase<Args...>& Add(void(U::* memberFunctionToCall)(Args...), U* thisPtr)
+		{
+			return operator+=(EventHandler::Bind(memberFunctionToCall, thisPtr));
+		}
+
+		EventBase<void>& Add(void(*nonMemberFunctionToCall)())
+		{
+			return operator+=(EventHandler::Bind(nonMemberFunctionToCall));
+		}
+
+		template <typename U>
+		EventBase<void>& Add(void(U::* memberFunctionToCall)(), U* thisPtr)
+		{
+			return operator+=(EventHandler::Bind(memberFunctionToCall, thisPtr));
+		}
+
+		EventBase<Args...>& Remove(void(*nonMemberFunctionToCall)(Args...))
+		{
+			return operator-=(EventHandler::Bind(nonMemberFunctionToCall));
+		}
+
+		template <typename U>
+		EventBase<Args...>& Remove(void(U::* memberFunctionToCall)(Args...), U* thisPtr)
+		{
+			return operator-=(EventHandler::Bind(memberFunctionToCall, thisPtr));
+		}
+
+		EventBase<void>& Remove(void(*nonMemberFunctionToCall)())
+		{
+			return operator-=(EventHandler::Bind(nonMemberFunctionToCall));
+		}
+
+		template <typename U>
+		EventBase<void>& Remove(void(U::* memberFunctionToCall)(), U* thisPtr)
+		{
+			return operator-=(EventHandler::Bind(memberFunctionToCall, thisPtr));
+		}
+
+
 		EventBase<Args...>& operator += (void(*nonMemberFunctionToCall)())
 		{
 			return operator+=(EventHandler::Bind(nonMemberFunctionToCall));

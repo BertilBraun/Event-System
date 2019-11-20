@@ -39,6 +39,7 @@ int main()
 
 	ShiftStarted += OnShiftStarted;
 	MoneyPaid += EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
+	MoneyPaid.Add(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 
 	std::cout << "Calling" << std::endl;
 	MoneyPaid(value, client);
@@ -47,6 +48,7 @@ int main()
 	std::cout << "Calling with changed Value" << std::endl;
 	MoneyPaid(value, client);
 
+	MoneyPaid.Remove(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 	MoneyPaid -= EventHandler::Bind(&Accountant::OnMoneyPaidMemberFunc, &accountant);
 	ShiftStarted -= OnShiftStarted;
 
